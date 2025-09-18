@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ManufacturerModule } from 'src/manufacturer/manufacturer.module';
+import { ArtworkModule } from 'src/artwork/artwork.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -21,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       autoLoadEntities: true,
       synchronize: true, // Não recomendado em ambiente de produção
     }),
-    ManufacturerModule,
+    ArtworkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

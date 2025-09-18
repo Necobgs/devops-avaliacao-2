@@ -15,12 +15,25 @@ services:
   
   nestjs:
     build:
+      context: ../api
       dockerfile: Dockerfile
     container_name: api-nestjs
     depends_on:
       - postgres
     ports:
       - "3005:3005"
+    networks:
+      - app-network
+
+  reactjs:
+    build:
+      context: ../front
+      dockerfile: Dockerfile
+    container_name: reactjs
+    depends_on:
+      - nestjs
+    ports:
+      - "3000:3000"
     networks:
       - app-network
 

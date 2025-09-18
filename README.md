@@ -1,99 +1,176 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Artwork API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API para gerenciamento de obras de arte, construída com **NestJS** e integrada com **PostgreSQL**, utilizando **Docker Compose** para orquestração.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Requisitos
 
-## Description
+- **Docker** e **Docker Compose** instalados.
+- **Node.js** (versão 18 ou superior, apenas para desenvolvimento local fora do Docker).
+- **NPM** (para instalar dependências, se necessário).
+- Porta **3005** disponível para a API.
+- Porta **5433** disponível para o PostgreSQL.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+## Como Executar via Docker Compose
 
-```bash
-$ npm install
-```
+### Passo a passo para subir a aplicação
 
-## Compile and run the project
+1. **Clone o repositório** (se aplicável):
+   ```bash
+   $ git clone <URL_DO_REPOSITORIO>
+   $ cd projeto
+   ```
 
-```bash
-# development
-$ npm run start
+2. **Suba os serviços com Docker Compose**:
+   Utilize este comando para construir e iniciar os containers em modo detached:
+   ```bash
+   $ docker compose -f ./deploy/docker-compose.yml up -d --build
+   ```
 
-# watch mode
-$ npm run start:dev
+3. **Verifique os serviços rodando**:
+   ```bash
+   $ docker compose -f ./deploy/docker-compose.yml ps
+   ```
 
-# production mode
-$ npm run start:prod
-```
+### Instruções para derrubar os recursos
 
-## Run tests
+1. **Pare e remova os containers**:
+   ```bash
+   $ docker compose -f ./deploy/docker-compose.yml down
+   ```
 
-```bash
-# unit tests
-$ npm run test
+2. **(Opcional) Remova volumes para limpar dados do PostgreSQL**:
+   ```bash
+   $ docker compose -f ./deploy/docker-compose.yml down -v
+   ```
 
-# e2e tests
-$ npm run test:e2e
+3. **(Opcional) Limpe imagens e cache do Docker**:
+   ```bash
+   $ docker system prune -f
+   ```
 
-# test coverage
-$ npm run test:cov
-```
+## Endpoints CRUD para API
 
-## Deployment
+A API oferece operações CRUD para gerenciamento de obras de arte (artworks). Acesse a documentação Swagger em `http://localhost:3005/api`.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## URL para frontend
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+`http://localhost:3000`.
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### **1. Listar todas as obras**
+- **Método**: GET
+- **URL**: `/artwork`
+- **Exemplo de Requisição**:
+  ```bash
+  curl http://localhost:3005/artwork
+  ```
+- **Exemplo de Resposta**:
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "Mona Lisa",
+      "artist": "Leonardo da Vinci",
+      "year": 1503
+    },
+    {
+      "id": 2,
+      "title": "The Starry Night",
+      "artist": "Vincent van Gogh",
+      "year": 1889
+    }
+  ]
+  ```
 
-## Resources
+### **2. Buscar uma obra por ID**
+- **Método**: GET
+- **URL**: `/artwork/:id`
+- **Exemplo de Requisição**:
+  ```bash
+  curl http://localhost:3005/artwork/1
+  ```
+- **Exemplo de Resposta**:
+  ```json
+  {
+    "id": 1,
+    "title": "Mona Lisa",
+    "artist": "Leonardo da Vinci",
+    "year": 1503
+  }
+  ```
 
-Check out a few resources that may come in handy when working with NestJS:
+### **3. Criar uma nova obra**
+- **Método**: POST
+- **URL**: `/artwork`
+- **Body** (JSON):
+  ```json
+  {
+    "title": "The Scream",
+    "artist": "Edvard Munch",
+    "year": 1893
+  }
+  ```
+- **Exemplo de Requisição**:
+  ```bash
+  curl -X POST http://localhost:3005/artwork \
+  -H "Content-Type: application/json" \
+  -d '{"title":"The Scream","artist":"Edvard Munch","year":1893}'
+  ```
+- **Exemplo de Resposta**:
+  ```json
+  {
+    "id": 3,
+    "title": "The Scream",
+    "artist": "Edvard Munch",
+    "year": 1893
+  }
+  ```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### **4. Atualizar uma obra**
+- **Método**: PUT
+- **URL**: `/artwork/:id`
+- **Body** (JSON):
+  ```json
+  {
+    "title": "The Scream Updated",
+    "artist": "Edvard Munch",
+    "year": 1895
+  }
+  ```
+- **Exemplo de Requisição**:
+  ```bash
+  curl -X PUT http://localhost:3005/artwork/3 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"The Scream Updated","artist":"Edvard Munch","year":1895}'
+  ```
+- **Exemplo de Resposta**:
+  ```json
+  {
+    "id": 3,
+    "title": "The Scream Updated",
+    "artist": "Edvard Munch",
+    "year": 1895
+  }
+  ```
 
-## Support
+### **5. Deletar uma obra**
+- **Método**: DELETE
+- **URL**: `/artwork/:id`
+- **Exemplo de Requisição**:
+  ```bash
+  curl -X DELETE http://localhost:3005/artwork/3
+  ```
+- **Exemplo de Resposta**:
+  ```json
+  {
+    "message": "Artwork deleted successfully"
+  }
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Notas Adicionais
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Swagger**: Acesse `http://localhost:3005/api` para a documentação interativa da API.
+- **Hot Reload**: Para desenvolvimento, o volume mapeado no `docker-compose.yml` permite refletir mudanças no código sem rebuild (em modo `start:dev`).
+- **Limpeza de Recursos**: Use `docker compose -f ./deploy/docker-compose.yml down -v` para remover containers e volumes.
+- **Logs**: Verifique erros ou logs com `docker compose -f ./deploy/docker-compose.yml logs -f nestjs`.

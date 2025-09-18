@@ -20,7 +20,7 @@ async function bootstrap() {
     .setTitle('API DevOps')
     .setDescription('API desenvolvida em aula da matéria de DevOps')
     .setVersion('1.0')
-    .addTag('Manufacturer', 'Gestão de dados de fabricante')
+    .addTag('Artwork', 'Gestão de dados de fabricante')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
